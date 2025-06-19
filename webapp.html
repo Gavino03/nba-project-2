@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NBA Player Guessing Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f2ede4; color: #333; text-align: center; padding: 20px; }
+    h1 { color: #1d428a; }
+    table { width: 95%; margin: 20px auto; border-collapse: collapse; font-size: 18px; }
+    th, td { border: 2px dashed #1d428a; padding: 8px; text-align: center; }
+    th { background-color: #f9f6ef; }
+    .correct { background-color: #90ee90; }
+    .incorrect { background-color: #f08080; }
+    input, button { padding: 10px; font-size: 16px; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>NBA Player Guessing Game</h1>
+  <input id="playerInput" placeholder="Enter player name..." />
+  <button onclick="checkGuess()">Guess</button>
+  <table><thead>
+    <tr><th>Name</th><th>Team</th><th>Conference</th><th>Division</th><th>Position</th><th>Height</th><th>Age</th><th>Number</th></tr>
+  </thead><tbody id="guessTable"></tbody></table>
+  <div id="result" style="font-weight:bold; margin-top:20px;"></div>
+  <script>
+    const players = [
+      {name:"Luka Doncic",team:"DAL",conference:"West",division:"Southwest",position:"G",height:"6'7"",age:25,number:77},
+      {name:"Stephen Curry",team:"GSW",conference:"West",division:"Pacific",position:"G",height:"6'2"",age:36,number:30},
+      {name:"Nikola Jokic",team:"DEN",conference:"West",division:"Northwest",position:"C",height:"6'11"",age:29,number:15},
+      {name:"LeBron James",team:"LAL",conference:"West",division:"Pacific",position:"F",height:"6'9"",age:39,number:23},
+      {name:"Giannis Antetokounmpo",team:"MIL",conference:"East",division:"Central",position:"F",height:"6'11"",age:29,number:34}
+    ];
+    const answer = players[Math.floor(Math.random() * players.length)];
+    let tries = 0;
+    function checkGuess() {
+      const input = document.getElementById("playerInput").value.trim().toLowerCase();
+      const tbody = document.getElementById("guessTable");
+      const resultDiv = document.getElementById("result");
+      if (tries >= 8) {
+        resultDiv.textContent = "❌ All guesses used. Player was: " + answer.name; return;
+      }
+      const guess = players.find(p => p.name.toLowerCase() === input);
+      if (!guess) { alert("Player not found."); return; }
+      const row = document.createElement("tr");
+      ["name","team","conference","division","position","height","age","number"].forEach(prop => {
+        const td = document.createElement("td");
+        td.textContent = guess[prop];
+        td.className = guess[prop] === answer[prop] ? "correct" : "incorrect";
+        row.appendChild(td);
+      });
+      tbody.appendChild(row);
+      tries++;
+      if (guess.name === answer.name) {
+        resultDiv.textContent = "🎉 You guessed the player in " + tries + " tries!";
+      } else if (tries === 8) {
+        resultDiv.textContent = "❌ All guesses used. Player was: " + answer.name;
+      }
+      document.getElementById("playerInput").value = "";
+    }
+  </script>
+</body>
+</html>
